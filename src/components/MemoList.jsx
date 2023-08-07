@@ -1,18 +1,20 @@
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { React } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity,
+  View, Text, StyleSheet, TouchableOpacity, Alert,
 } from 'react-native';
 
 export default function MemoList() {
+  const navigation = useNavigation();
   return (
     <View style={styles.memoListItem}>
-      <View>
+      <TouchableOpacity onPress={() => { navigation.navigate('MemoDetail'); }}>
         <Text style={styles.memoListTitle}>買い物リスト</Text>
         <Text style={styles.memoListDate}>2020年12月24日 10:00</Text>
-      </View>
-      <TouchableOpacity>
-        <Feather name="x" size={16} color="B0B0B0" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => { Alert.alert('Delete'); }}>
+        <Feather name="x" size={24} color="#B0B0B0" style={styles.deleteIcon} />
       </TouchableOpacity>
     </View>
   );
@@ -39,5 +41,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     color: '#848484',
+  },
+  deleteIcon: {
+    padding: 8,
   },
 });
