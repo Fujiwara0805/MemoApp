@@ -1,24 +1,52 @@
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import {
+  shape, arrayOf, string, instanceOf,
+} from 'prop-types';
 import { React } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, Alert,
+  View, Text, StyleSheet, TouchableOpacity, Alert, FlatList,
 } from 'react-native';
 
-export default function MemoList() {
+export default function MemoList(props) {
   const navigation = useNavigation();
+  const { memos } = props;
+
+  function renderItem({ item }) {
+    return (
+      <View style={styles.memoListItem}>
+        <TouchableOpacity onPress={() => { navigation.navigate('MemoDetail'); }}>
+          <Text style={styles.memoListTitle} numberOfLines={1}>{item.bodyText}</Text>
+          <Text style={styles.memoListDate}>{String(item.updatedAt)}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => { Alert.alert('Delete'); }}>
+          <Feather name="x" size={24} color="#B0B0B0" style={styles.deleteIcon} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.memoListItem}>
-      <TouchableOpacity onPress={() => { navigation.navigate('MemoDetail'); }}>
-        <Text style={styles.memoListTitle}>買い物リスト</Text>
-        <Text style={styles.memoListDate}>2020年12月24日 10:00</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => { Alert.alert('Delete'); }}>
-        <Feather name="x" size={24} color="#B0B0B0" style={styles.deleteIcon} />
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <FlatList
+        data={memos}
+        // eslint-disable-next-line react/jsx-no-bind
+        renderItem={renderItem}
+        keyExtractor={(item) => (item.id)}
+      />
     </View>
   );
 }
+
+MemoList.propTypes = {
+  memos: arrayOf(
+    shape({
+      id: string,
+      bodyText: string,
+      updatedAt: instanceOf(Date),
+    }),
+  ).isRequired,
+};
 
 const styles = StyleSheet.create({
   /* memo lists */
@@ -44,5 +72,8 @@ const styles = StyleSheet.create({
   },
   deleteIcon: {
     padding: 8,
+  },
+  container: {
+    flex: 1,
   },
 });
