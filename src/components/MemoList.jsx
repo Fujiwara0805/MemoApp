@@ -7,6 +7,7 @@ import { React } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Alert, FlatList,
 } from 'react-native';
+import { dateToString } from '../utils';
 
 export default function MemoList(props) {
   const navigation = useNavigation();
@@ -15,9 +16,9 @@ export default function MemoList(props) {
   function renderItem({ item }) {
     return (
       <View style={styles.memoListItem}>
-        <TouchableOpacity onPress={() => { navigation.navigate('MemoDetail'); }}>
+        <TouchableOpacity onPress={() => { navigation.navigate('MemoDetail', { id: item.id }); }}>
           <Text style={styles.memoListTitle} numberOfLines={1}>{item.bodyText}</Text>
-          <Text style={styles.memoListDate}>{String(item.updatedAt)}</Text>
+          <Text style={styles.memoListDate}>{dateToString(item.updatedAt)}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => { Alert.alert('Delete'); }}>
           <Feather name="x" size={24} color="#B0B0B0" style={styles.deleteIcon} />

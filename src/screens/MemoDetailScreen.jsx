@@ -1,22 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View, Text, StyleSheet, ScrollView,
 } from 'react-native';
-
-import { func, shape } from 'prop-types';
+import firebase from 'firebase';
+import { func, shape, string } from 'prop-types';
 import CircleButton from '../components/CircleButton';
+import { dateToString } from '../utils/index';
 
 export default function MemoDetailScreen(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  const { id } = route.params;
+  const [memo, setMemo] = useState(null);
+
+  useEffect(() => {
+    const { currentUser } = firebase.auth();
+    let unsubscribe = () => {};
+    if (currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
+      unsubscribe = ref.onSnapshot((doc) => {
+        const data = doc.data();
+        setMemo({
+          id: data.id,
+          bodyText: data.bodyText,
+          updatedAt: data.updatedAt.toDate(),
+        });
+      });
+    }
+    return unsubscribe;
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.MemoHeader}>
-        <Text style={styles.MemoTitle}>買い物リスト</Text>
-        <Text style={styles.MemoDate}>2020年12月24日 10:00</Text>
+        <Text style={styles.MemoTitle} numberOfLines={1}>{memo && memo.bodyText}</Text>
+        <Text style={styles.MemoDate}>{memo && dateToString(memo.updatedAt)}</Text>
       </View>
       <ScrollView style={styles.MemoBody}>
         <Text style={styles.MemoText}>
-          買い物リスト書体やレイアウトなどを確認するために用います。本文用なので使い方を間違えると不自然に見えることもありますので要注意
+          {memo && memo.bodyText}
         </Text>
       </ScrollView>
       <CircleButton
@@ -32,6 +54,11 @@ MemoDetailScreen.propTypes = {
   navigation: shape({
     navigate: func,
   }),
+  route: shape({
+    params: shape({
+      id: string,
+    }),
+  }).isRequired,
 };
 
 MemoDetailScreen.defaultProps = {
