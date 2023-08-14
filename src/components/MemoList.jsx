@@ -33,7 +33,7 @@ export default function MemoList(props) {
         data={memos}
         // eslint-disable-next-line react/jsx-no-bind
         renderItem={renderItem}
-        keyExtractor={(item) => (item.id)}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );

@@ -21,7 +21,7 @@ export default function MemoDetailScreen(props) {
       unsubscribe = ref.onSnapshot((doc) => {
         const data = doc.data();
         setMemo({
-          id: data.id,
+          id,
           bodyText: data.bodyText,
           updatedAt: data.updatedAt.toDate(),
         });
@@ -44,7 +44,7 @@ export default function MemoDetailScreen(props) {
       <CircleButton
         style={{ top: 60, bottom: 'auto' }}
         name="edit-2"
-        onPress={() => { navigation.navigate('MemoEdit'); }}
+        onPress={() => { navigation.navigate('MemoEdit', { id: memo.id, bodyText: memo.bodyText }); }}
       />
     </View>
   );
