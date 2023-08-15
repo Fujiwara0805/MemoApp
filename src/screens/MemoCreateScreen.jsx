@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import React, { useState } from 'react';
 import {
-  View, StyleSheet, TextInput,
+  View, StyleSheet, TextInput, Alert,
 } from 'react-native';
 
 import { func, shape } from 'prop-types';
@@ -21,14 +21,11 @@ export default function MemoCreateScreen(props) {
       bodyText,
       updatedAt: new Date(),
     })
-      .then((docRef) => {
-        // eslint-disable-next-line no-console
-        console.log('Created!', docRef.id);
+      .then(() => {
         navigation.goBack();
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.log(error, error.message);
+        Alert.alert(error.message);
       });
   }
   return (

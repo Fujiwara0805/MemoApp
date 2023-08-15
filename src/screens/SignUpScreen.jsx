@@ -17,15 +17,14 @@ export default function SignUpScreen(props) {
         const { user } = userCredential;
         // eslint-disable-next-line no-console
         console.log(user.uid);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MemoList' }],
+        });
       })
       .catch((error) => {
         Alert.alert(error.message);
       });
-
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'MemoList' }],
-    });
   }
 
   return (
