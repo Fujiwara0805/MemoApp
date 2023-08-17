@@ -58,7 +58,7 @@ export default function MemoListScreen(props) {
       <View style={emptyStyles.container}>
         <Loading isLoading={isLoading} />
         <View style={emptyStyles.inner}>
-          <Text style={emptyStyles.title}>メモを作成してみよう！</Text>
+          <Text style={emptyStyles.title}>最初のメモを作成してみよう！</Text>
           <Button label="作成する" style={emptyStyles.button} onPress={() => { navigation.navigate('MemoCreate'); }} />
         </View>
       </View>
@@ -96,7 +96,7 @@ const emptyStyles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    marginBottom: 8,
+    marginBottom: 16,
   },
   button: {
     alignSelf: 'center',

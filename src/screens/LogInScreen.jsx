@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import { func, shape } from 'prop-types';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
+import { translateErrors } from '../utils';
 
 export default function LogInScreen(props) {
   const { navigation } = props;
@@ -29,18 +30,16 @@ export default function LogInScreen(props) {
   }, []);
 
   function handlePress() {
+    setLoading(true);
     firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        const { user } = userCredential;
-        // eslint-disable-next-line no-console
-        console.log(user.uid);
+      .then(() => {
         navigation.reset({
           index: 0,
           routes: [{ name: 'MemoList' }],
         });
       })
       .catch((error) => {
-        Alert.alert(error.code);
+        Alert.alert(translateErrors(error.code));
       })
       .then(() => {
         setLoading(false);

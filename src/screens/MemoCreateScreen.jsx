@@ -8,15 +8,18 @@ import { func, shape } from 'prop-types';
 import firebase from 'firebase';
 import CircleButton from '../components/CircleButton';
 import KeyboardSafeView from '../components/KeyboardSafeView';
+import Loading from '../components/Loading';
 
 export default function MemoCreateScreen(props) {
   const { navigation } = props;
   const [bodyText, setBodyText] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   function handlePress() {
     const db = firebase.firestore();
     const { currentUser } = firebase.auth();
     const ref = db.collection(`users/${currentUser.uid}/memos`);
+    setLoading(true);
     ref.add({
       bodyText,
       updatedAt: new Date(),
@@ -26,10 +29,14 @@ export default function MemoCreateScreen(props) {
       })
       .catch((error) => {
         Alert.alert(error.message);
+      })
+      .then(() => {
+        setLoading(false);
       });
   }
   return (
     <KeyboardSafeView style={styles.container}>
+      <Loading isLoading={isLoading} />
       <View style={styles.inputContainer}>
         <TextInput
           value={bodyText}

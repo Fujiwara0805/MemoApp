@@ -7,11 +7,35 @@ import { React } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Alert, FlatList,
 } from 'react-native';
+import firebase from 'firebase';
 import { dateToString } from '../utils';
 
 export default function MemoList(props) {
   const navigation = useNavigation();
   const { memos } = props;
+
+  function deleteMemo(id) {
+    const { currentUser } = firebase.auth();
+    if (currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
+      Alert.alert('メモを削除します', 'よろしいですか？', [
+        {
+          text: 'キャンセル',
+          onPress: () => {},
+        },
+        {
+          text: '削除する',
+          style: 'destructive',
+          onPress: () => {
+            ref.delete().catch(() => {
+              Alert.alert('削除に失敗しました');
+            });
+          },
+        },
+      ]);
+    }
+  }
 
   function renderItem({ item }) {
     return (
@@ -20,7 +44,7 @@ export default function MemoList(props) {
           <Text style={styles.memoListTitle} numberOfLines={1}>{item.bodyText}</Text>
           <Text style={styles.memoListDate}>{dateToString(item.updatedAt)}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { Alert.alert('Delete'); }}>
+        <TouchableOpacity onPress={() => { deleteMemo(item.id); }}>
           <Feather name="x" size={24} color="#B0B0B0" style={styles.deleteIcon} />
         </TouchableOpacity>
       </View>
