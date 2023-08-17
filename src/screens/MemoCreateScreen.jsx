@@ -9,6 +9,7 @@ import firebase from 'firebase';
 import CircleButton from '../components/CircleButton';
 import KeyboardSafeView from '../components/KeyboardSafeView';
 import Loading from '../components/Loading';
+import { translateErrors } from '../utils';
 
 export default function MemoCreateScreen(props) {
   const { navigation } = props;
@@ -28,7 +29,7 @@ export default function MemoCreateScreen(props) {
         navigation.goBack();
       })
       .catch((error) => {
-        Alert.alert(error.message);
+        Alert.alert(translateErrors(error.code));
       })
       .then(() => {
         setLoading(false);
